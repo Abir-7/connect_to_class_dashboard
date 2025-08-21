@@ -54,14 +54,28 @@
 "use client";
 
 import OverviewCard from "@/components/Dashboard/DashboardOverviewCard/OverviewCard";
+import DashboardTableUser from "@/components/Table/DashboardTableUser";
+import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
 import React from "react";
 
 const Page = () => {
   return (
-    <div className="flex-1 p-4 flex flex-wrap gap-4">
-      <OverviewCard />
-      <OverviewCard />
-      <OverviewCard />
+    <div className="p-6 space-y-10">
+      <div className="flex-1  flex flex-wrap gap-4">
+        <OverviewCard />
+        <OverviewCard />
+        <OverviewCard />
+      </div>
+      <div className="border rounded-md ">
+        <div className="p-6 space-y-6">
+          <div className=" text-[18px] font-[500px]">Recently Joined Users</div>
+          <ToggleGroupButton></ToggleGroupButton>
+        </div>
+        <div>
+          <hr />
+          <DashboardTableUser></DashboardTableUser>
+        </div>
+      </div>
     </div>
   );
 };
