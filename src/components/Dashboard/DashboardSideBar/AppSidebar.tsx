@@ -14,13 +14,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
-import { Inbox, Search, ChevronDown, ChevronRight } from "lucide-react";
+import { Inbox, ChevronDown, ChevronRight } from "lucide-react";
 import LogoutButton from "../../LogoutComponent/LogoutButton";
 import { userRoles } from "@/interface/authinterface";
 import mainlogo from "@/assets/images/main_logo.png";
 import Image from "next/image";
-import { Input } from "../../ui/input";
+
 import { IoHome } from "react-icons/io5";
+import SearchCustom from "@/components/Search/SearchCustom";
 
 // ✅ Menu config
 const items = [
@@ -36,8 +37,9 @@ const items = [
     icon: Inbox,
     roles: [userRoles.ADMIN],
     children: [
-      { title: "Add User", url: "/users" },
-      { title: "Manage User", url: "/userss" },
+      { title: "Teachers", url: "/users/teachers" },
+      { title: "Parents", url: "/users/parents" },
+      { title: "Students", url: "/users/students" },
     ],
   },
 ];
@@ -68,12 +70,8 @@ export function AppSidebar() {
 
         <SidebarContent className="px-2 bg-[#FFFFFF]">
           {/* Search */}
-          <SidebarGroup className="relative">
-            <Input placeholder="Search..." className="pl-8" />
-            <Search
-              className="absolute text-[#359AB1] left-4 top-1/2 -translate-y-1/2"
-              size={20}
-            />
+          <SidebarGroup>
+            <SearchCustom></SearchCustom>
           </SidebarGroup>
 
           {/* Menu */}
@@ -103,7 +101,9 @@ export function AppSidebar() {
                             >
                               <div className="flex items-center gap-2">
                                 <item.icon />
-                                <span className="text-lg">{item.title}</span>
+                                <span className="text-[16px]">
+                                  {item.title}
+                                </span>
                               </div>
                               {openMenus.includes(item.title) ? (
                                 <ChevronDown size={16} />
@@ -117,7 +117,7 @@ export function AppSidebar() {
                               href={item.url}
                             >
                               <item.icon />
-                              <span className="text-lg">{item.title}</span>
+                              <span className="text-[16px]">{item.title}</span>
                             </Link>
                           )}
                         </SidebarMenuButton>
@@ -125,19 +125,19 @@ export function AppSidebar() {
 
                       {/* Child Sub-links (collapsible) */}
                       {item.children && openMenus.includes(item.title) && (
-                        <div className="ml-4 mt-1 space-y-2 pt-1">
+                        <div className="ml-6 mt-1 space-y-2 pt-1">
                           {item.children.map((child) => (
                             <SidebarMenuItem
                               key={child.title}
                               className={`${
                                 selectedPath === child.url
-                                  ? "bg-[#EDFBFE] font-semibold  text-[#297789]"
+                                  ? " font-semibold  text-[#297789]"
                                   : ""
-                              } text-[15px] rounded-md   hover:bg-[#EDFBFE]    hover:text-[#297789]`}
+                              }  rounded-md   hover:bg-[#EDFBFE]    hover:text-[#297789]`}
                             >
                               <SidebarMenuButton
                                 asChild
-                                className="hover:bg-[#EDFBFE]  h-[46px] active:bg-[#EDFBFE] active:text-[#297789] duration-300 hover:text-[#297789]"
+                                className="hover:bg-[#EDFBFE]  h-[46px] active:bg-[#EDFBFE] active:text-[#297789] duration-300 hover:text-[#297789] text-[16px]"
                               >
                                 <Link
                                   onClick={() => setSelectedPath(child.url)}

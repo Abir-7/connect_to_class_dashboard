@@ -6,7 +6,7 @@ import { poppins } from "@/lib/font";
 const OverviewCard = () => {
   return (
     <div
-      className={`${poppins.className} w-full h-44 relative  shadow p-6 rounded-md flex-1 min-w-[250px]`}
+      className={`${poppins.className} w-full h-44 relative  shadow p-6 rounded-md flex-1 min-w-[300px]`}
     >
       <div className="flex flex-col justify-between h-full ">
         <h1 className="font-semibold text-[16px]  ">Total Customers</h1>

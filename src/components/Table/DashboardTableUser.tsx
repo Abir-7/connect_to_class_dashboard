@@ -1,88 +1,130 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+interface DynamicTableProps {
+  headers: string[];
+  data: Record<string, any>[];
+  avatarField?: string; // field in data for avatar image
+  badgeField?: string; // field in data for badge
+  getBadgeClasses?: (type: string) => string; // external badge function
+}
 
-const DashboardTableUser = () => {
+// Example external badge function
+export const getBadgeClasses = (type: string) => {
+  switch (type) {
+    case "Teacher":
+      return "bg-purple-100 text-purple-800";
+    case "Parents":
+      return "bg-green-100 text-green-800";
+    case "Students":
+      return "bg-blue-100 text-blue-800";
+    default:
+      return "";
+  }
+};
+
+export const DynamicTable: React.FC<DynamicTableProps> = ({
+  headers,
+  data,
+  avatarField,
+  badgeField,
+  getBadgeClasses,
+}) => {
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="bg-gray-50">
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          {headers.map((header) => (
+            <TableHead key={header} className="font-medium text-gray-600">
+              {header}
+            </TableHead>
+          ))}
         </TableRow>
       </TableHeader>
+
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {data.map((row, index) => (
+          <TableRow
+            key={row.id || row.email || index}
+            className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+          >
+            {headers.map((header) => {
+              const key = header.toLowerCase();
+              const value = row[key] || "";
+
+              // Name column with avatar + username
+              if (key === "name") {
+                return (
+                  <TableCell key={header}>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        {row[avatarField || "image"] ? (
+                          <AvatarImage
+                            src={row[avatarField || "image"]}
+                            alt={row.name || ""}
+                          />
+                        ) : (
+                          <AvatarFallback className="bg-blue-100 text-blue-700">
+                            {row.name ? getInitials(row.name) : "NA"}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div>
+                        <div className="font-medium text-gray-900">
+                          {row.name}
+                        </div>
+                        {row.username && (
+                          <div className="text-gray-500 text-sm">
+                            {row.username}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </TableCell>
+                );
+              }
+
+              // Badge column
+              if (badgeField && key === badgeField.toLowerCase()) {
+                return (
+                  <TableCell key={header}>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        getBadgeClasses?.(row[badgeField]) || ""
+                      }`}
+                    >
+                      {row[badgeField]}
+                    </span>
+                  </TableCell>
+                );
+              }
+
+              // Default column
+              return (
+                <TableCell key={header} className="text-gray-900">
+                  {value}
+                </TableCell>
+              );
+            })}
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   );
 };
-
-export default DashboardTableUser;

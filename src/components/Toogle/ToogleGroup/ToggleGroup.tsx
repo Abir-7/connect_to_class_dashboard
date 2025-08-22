@@ -1,22 +1,36 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-export function ToggleGroupButton() {
+interface ToggleOption {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  options: ToggleOption[];
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+}
+
+export function ToggleGroupButton({ options, defaultValue, onChange }: Props) {
   return (
-    <ToggleGroup type="single" className="">
-      <ToggleGroupItem
-        value="bold"
-        aria-label="Toggle bold"
-        className="border-[0.5px] border-r-0 px-3"
-      >
-        View All
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="italic"
-        aria-label="Toggle italic"
-        className=" border-[0.5px] px-3"
-      >
-        Last 7 Days
-      </ToggleGroupItem>
+    <ToggleGroup
+      type="single"
+      defaultValue={defaultValue}
+      onValueChange={(val) => val && onChange?.(val)}
+      className="border rounded-md overflow-hidden"
+    >
+      {options.map((opt, idx) => (
+        <ToggleGroupItem
+          key={opt.value}
+          value={opt.value}
+          aria-label={`Toggle ${opt.label}`}
+          className={`px-3 data-[state=on]:bg-gray-200 ${
+            idx !== options.length - 1 ? "border-r" : ""
+          }`}
+        >
+          {opt.label}
+        </ToggleGroupItem>
+      ))}
     </ToggleGroup>
   );
 }
