@@ -16,17 +16,28 @@ import { usePathname } from "next/navigation";
 
 import { Inbox, ChevronDown, ChevronRight } from "lucide-react";
 import LogoutButton from "../../LogoutComponent/LogoutButton";
-import { userRoles } from "@/interface/authinterface";
+import { TUserRoles, userRoles } from "@/interface/authinterface";
 import mainlogo from "@/assets/images/main_logo.png";
 import Image from "next/image";
 
 import { IoHome } from "react-icons/io5";
 import SearchCustom from "@/components/Search/SearchCustom";
+import { IconType } from "react-icons/lib";
+interface MenuItem {
+  title: string;
+  url: string;
+  icon?: IconType; // optional if some items may not have icons
+  roles: TUserRoles[];
+  children?: {
+    title: string;
+    url: string;
+  }[];
+}
 
 // ✅ Menu config
-const items = [
+const items: MenuItem[] = [
   {
-    title: "Dashboard",
+    title: "Overview",
     url: "/",
     icon: IoHome,
     roles: [...Object.values(userRoles)],
@@ -36,11 +47,24 @@ const items = [
     url: "/users",
     icon: Inbox,
     roles: [userRoles.ADMIN],
-    children: [
-      { title: "Teachers", url: "/users/teachers" },
-      { title: "Parents", url: "/users/parents" },
-      { title: "Students", url: "/users/students" },
-    ],
+  },
+  {
+    title: "Class",
+    url: "/all_class",
+    icon: Inbox,
+    roles: [userRoles.ADMIN],
+  },
+  {
+    title: "Event",
+    url: "/event",
+    icon: Inbox,
+    roles: [userRoles.ADMIN],
+  },
+  {
+    title: "Privacy & Policy",
+    url: "/privacy_&_policy",
+    icon: Inbox,
+    roles: [userRoles.ADMIN],
   },
 ];
 
@@ -85,7 +109,8 @@ export function AppSidebar() {
                       {/* Parent Item */}
                       <SidebarMenuItem
                         className={`${
-                          selectedPath === item.url
+                          selectedPath === item.url ||
+                          selectedPath.includes(`${item.url}/`)
                             ? "bg-[#EDFBFE] font-semibold   text-[#297789]"
                             : ""
                         } text-[16px]  rounded-md`}
@@ -100,7 +125,7 @@ export function AppSidebar() {
                               className="w-full flex items-center justify-between"
                             >
                               <div className="flex items-center gap-2">
-                                <item.icon />
+                                {item.icon && <item.icon />}
                                 <span className="text-[16px]">
                                   {item.title}
                                 </span>
@@ -116,7 +141,7 @@ export function AppSidebar() {
                               onClick={() => setSelectedPath(item.url)}
                               href={item.url}
                             >
-                              <item.icon />
+                              {item.icon && <item.icon />}
                               <span className="text-[16px]">{item.title}</span>
                             </Link>
                           )}

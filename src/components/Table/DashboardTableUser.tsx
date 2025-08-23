@@ -90,7 +90,7 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
                           {row.name}
                         </div>
                         {row.username && (
-                          <div className="text-gray-500 text-sm">
+                          <div className="text-gray-500 text-xs">
                             {row.username}
                           </div>
                         )}

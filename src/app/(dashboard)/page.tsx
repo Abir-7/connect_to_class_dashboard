@@ -132,7 +132,7 @@ const Page = () => {
             <SearchCustom></SearchCustom>
           </div>
         </div>
-        <div>
+        <div className="h-[calc(100vh-524px)] overflow-y-auto">
           <hr />
           <DynamicTable
             headers={headers}
