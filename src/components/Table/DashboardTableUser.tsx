@@ -117,7 +117,7 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
 
               // Default column
               return (
-                <TableCell key={header} className="text-gray-900">
+                <TableCell key={header} className="text-gray-500">
                   {value}
                 </TableCell>
               );

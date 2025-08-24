@@ -6,82 +6,56 @@ import { PaginationCustom } from "@/components/Pagination/PaginationCustom";
 import SearchCustom from "@/components/Search/SearchCustom";
 
 import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
-import { EventTable } from "@/components/Table/DashboardTableEvent";
+import { EventTable } from "@/components/Table/EventTable/DashboardTableEvent";
+
+export interface EventRow {
+  id: number;
+  event: string;
+  description: string;
+  eventImage?: string;
+  user: string;
+  userName: string;
+  image?: string;
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
+  category?: string;
+  days_remaining?: number;
+  location?: string;
+}
+
 const Page = () => {
   const [selectedToogle, setToogle] = useState("All");
-  const headers = ["Event", "Created by", "Date"];
+  const headers = ["Event", "Created by", "Start date", "End date"];
   const data = [
     {
+      id: 1,
       event: "Conference 2025",
-      eventImage: "/conf.png",
+      description:
+        "An annual conference discussing the latest in technology, startups, and innovation.",
+      eventImage:
+        "https://static.vecteezy.com/system/resources/thumbnails/036/397/588/small_2x/ai-generated-concert-crowd-in-front-of-a-big-stage-with-lights-and-smoke-photo.jpeg",
+
+      // User Info
       user: "Charlie",
       userName: "dasd",
       image: "/charlie.png",
-      date: "2025-09-01",
-    },
-    {
-      event: "Workshop",
-      eventImage: "/workshop.png",
-      user: "Dana",
-      userName: "dasd",
-      image: "/dana.png",
-      date: "2025-09-10",
-    },
-    {
-      event: "Conference 2025",
-      eventImage: "/conf.png",
-      user: "Charlie",
-      userName: "dasd",
-      image: "/charlie.png",
-      date: "2025-09-01",
-    },
-    {
-      event: "Workshop",
-      eventImage: "/workshop.png",
-      user: "Dana",
-      userName: "dasd",
-      image: "/dana.png",
-      date: "2025-09-10",
-    },
-    {
-      event: "Conference 2025",
-      eventImage: "/conf.png",
-      user: "Charlie",
-      userName: "dasd",
-      image: "/charlie.png",
-      date: "2025-09-01",
-    },
-    {
-      event: "Workshop",
-      eventImage: "/workshop.png",
-      user: "Dana",
-      userName: "dasd",
-      image: "/dana.png",
-      date: "2025-09-10",
-    },
-    {
-      event: "Conference 2025",
-      eventImage: "/conf.png",
-      user: "Charlie",
-      userName: "dasd",
-      image: "/charlie.png",
-      date: "2025-09-01",
-    },
-    {
-      event: "Workshop",
-      eventImage: "/workshop.png",
-      user: "Dana",
-      userName: "dasd",
-      image: "/dana.png",
-      date: "2025-09-10",
-    },
-    {
-      event: "Conference 2025",
-      eventImage: "/conf.png",
-      user: "Charlie",
-      userName: "dasd",
-      image: "/charlie.png",
-      date: "2025-09-01",
+
+      // Dates
+      start_date: "2025-09-01",
+      end_date: "2025-09-03",
+
+      // Time
+      start_time: "10:30 AM",
+      end_time: "6:30 PM",
+
+      // Class / Category
+      category: "Dancing Star-A",
+
+      // Extra
+      days_remaining: 10,
+      location: "New York City",
     },
   ];
 

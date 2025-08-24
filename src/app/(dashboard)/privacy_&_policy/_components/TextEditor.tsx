@@ -32,6 +32,7 @@ import { ElementFormatToolbarPlugin } from "@/components/editor/plugins/toolbar/
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable";
 import { FontFormatToolbarPlugin } from "@/components/editor/plugins/toolbar/font-format-toolbar-plugin";
 import { FontSizeToolbarPlugin } from "@/components/editor/plugins/toolbar/font-size-toolbar-plugin";
+import { Label } from "@/components/ui/label";
 
 const placeholder = "Start typing...";
 
@@ -82,47 +83,52 @@ function Plugins({ onChange }: PluginsProps) {
   }, [editor, onChange]);
 
   return (
-    <div className="relative bg-background w-full overflow-hidden rounded-lg border">
-      {/* Toolbar */}
-      <ToolbarPlugin>
-        {({ blockType }) => (
-          <div className="sticky top-0 z-10 flex flex-wrap gap-2 overflow-auto border-b p-1 bg-background">
-            <BlockFormatDropDown>
-              <FormatParagraph />
-              <FormatHeading levels={["h1", "h2", "h3"]} />
-              <FormatNumberedList />
-              <FormatBulletedList />
-              <FormatCheckList />
-              <FormatQuote />
-            </BlockFormatDropDown>
+    <>
+      <Label className="text-[#272727] text-[16px]">Description</Label>
+      <div className="relative bg-background w-full mt-[-10px] overflow-hidden rounded-lg border">
+        {/* Toolbar */}
 
-            <FontFormatToolbarPlugin format="bold" />
-            <FontFormatToolbarPlugin format="italic" />
-            <FontFormatToolbarPlugin format="underline" />
-            <FontFormatToolbarPlugin format="strikethrough" />
+        <ToolbarPlugin>
+          {({ blockType }) => (
+            <div className="sticky top-0 z-10 flex flex-wrap gap-2 overflow-auto border-b p-1 bg-background">
+              <BlockFormatDropDown>
+                <FormatParagraph />
+                <FormatHeading levels={["h1", "h2", "h3"]} />
+                <FormatNumberedList />
+                <FormatBulletedList />
+                <FormatCheckList />
+                <FormatQuote />
+              </BlockFormatDropDown>
 
-            <FontSizeToolbarPlugin />
-            <ElementFormatToolbarPlugin />
-          </div>
-        )}
-      </ToolbarPlugin>
+              <FontFormatToolbarPlugin format="bold" />
+              <FontFormatToolbarPlugin format="italic" />
+              <FontFormatToolbarPlugin format="underline" />
+              <FontFormatToolbarPlugin format="strikethrough" />
 
-      {/* Editor */}
-      <div className="relative">
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable
-              placeholder={placeholder}
-              className="ContentEditable__root relative block h-72 overflow-auto px-4 py-3 focus:outline-none"
-            />
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
+              <FontSizeToolbarPlugin />
+              <ElementFormatToolbarPlugin />
+            </div>
+          )}
+        </ToolbarPlugin>
 
-        <ListPlugin />
-        <CheckListPlugin />
-        <TabIndentationPlugin />
+        {/* Editor */}
+        <div className="relative">
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable
+                placeholderClassName="absolute top-3 left-4 text-gray-400 "
+                placeholder={placeholder}
+                className="ContentEditable__root relative block h-72 overflow-auto px-4 py-3  focus:outline-none"
+              />
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+
+          <ListPlugin />
+          <CheckListPlugin />
+          <TabIndentationPlugin />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

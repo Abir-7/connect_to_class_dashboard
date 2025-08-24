@@ -38,7 +38,9 @@ export const FormInput: React.FC<FormInputProps> = ({
       rules={required ? { required: `${label} is required` } : undefined} // <-- validation
       render={({ field }) => (
         <FormItem>
-          <FormLabel className={` text-[14px] font-medium leading-[130%]`}>
+          <FormLabel
+            className={` text-[#272727] text-[16px] font-medium leading-[130%]`}
+          >
             {label}
             {required && <span className="text-red-500 ml-1">*</span>}
           </FormLabel>

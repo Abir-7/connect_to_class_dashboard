@@ -112,12 +112,12 @@ export function AppSidebar() {
                           selectedPath === item.url ||
                           selectedPath.includes(`${item.url}/`)
                             ? "bg-[#EDFBFE] font-semibold   text-[#297789]"
-                            : ""
-                        } text-[16px]  rounded-md`}
+                            : "text-[#272727]"
+                        } text-[16px]   rounded-md`}
                       >
                         <SidebarMenuButton
                           asChild={!item.children}
-                          className="flex  hover:bg-[#EDFBFE] h-[46px] hover:text-[#297789] duration-300 active:bg-[#EDFBFE] active:text-[#297789]"
+                          className="flex  hover:bg-[#EDFBFE] h-[46px] hover:text-[#297789] duration-300 active:bg-[#EDFBFE] active:text-[#297789] "
                         >
                           {item.children ? (
                             <div
@@ -142,7 +142,7 @@ export function AppSidebar() {
                               href={item.url}
                             >
                               {item.icon && <item.icon />}
-                              <span className="text-[16px]">{item.title}</span>
+                              <span className="text-[16px] ">{item.title}</span>
                             </Link>
                           )}
                         </SidebarMenuButton>

@@ -7,7 +7,7 @@ import SearchCustom from "@/components/Search/SearchCustom";
 
 import { ClassTable } from "@/components/Table/DashboardTableClass";
 const Page = () => {
-  const headers = ["Class", "User", "Subject", "Section"];
+  const headers = ["Class", "User", "Class Created"];
   const data = [
     {
       id: 1,
@@ -19,17 +19,19 @@ const Page = () => {
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
       subject: "Mathematics",
       section: "A",
+      createdAt: "12/3/25",
     },
     {
-      id: 2,
-      class: "Science 201",
-      classImage:
+      id: 1,
+      class: "Math 101",
+      classImage: "/images/class-math.png",
+      user: "John Doe2",
+      userName: "dasdasa",
+      image:
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-      user: "Jane Smith",
-      userName: "dasdasda",
-      image: "/images/jane.png",
-      subject: "Science",
-      section: "B",
+      subject: "Mathematics",
+      section: "A",
+      createdAt: "12/3/25",
     },
     {
       id: 1,
@@ -41,17 +43,19 @@ const Page = () => {
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
       subject: "Mathematics",
       section: "A",
+      createdAt: "12/3/25",
     },
     {
-      id: 2,
-      class: "Science 201",
-      classImage:
+      id: 1,
+      class: "Math 101",
+      classImage: "/images/class-math.png",
+      user: "John Doe2",
+      userName: "dasdasa",
+      image:
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-      user: "Jane Smith",
-      userName: "dasdasda",
-      image: "/images/jane.png",
-      subject: "Science",
-      section: "B",
+      subject: "Mathematics",
+      section: "A",
+      createdAt: "12/3/25",
     },
     {
       id: 1,
@@ -63,17 +67,19 @@ const Page = () => {
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
       subject: "Mathematics",
       section: "A",
+      createdAt: "12/3/25",
     },
     {
-      id: 2,
-      class: "Science 201",
-      classImage:
+      id: 1,
+      class: "Math 101",
+      classImage: "/images/class-math.png",
+      user: "John Doe2",
+      userName: "dasdasa",
+      image:
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-      user: "Jane Smith",
-      userName: "dasdasda",
-      image: "/images/jane.png",
-      subject: "Science",
-      section: "B",
+      subject: "Mathematics",
+      section: "A",
+      createdAt: "12/3/25",
     },
     {
       id: 1,
@@ -85,28 +91,19 @@ const Page = () => {
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
       subject: "Mathematics",
       section: "A",
+      createdAt: "12/3/25",
     },
     {
-      id: 2,
-      class: "Science 201",
-      classImage:
+      id: 1,
+      class: "Math 101",
+      classImage: "/images/class-math.png",
+      user: "John Doe2",
+      userName: "dasdasa",
+      image:
         "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-      user: "Jane Smith",
-      userName: "dasdasda",
-      image: "/images/jane.png",
-      subject: "Science",
-      section: "B",
-    },
-    {
-      id: 2,
-      class: "Science 201",
-      classImage:
-        "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-      user: "Jane Smith",
-      userName: "dasdasda",
-      image: "/images/jane.png",
-      subject: "Science",
-      section: "B",
+      subject: "Mathematics",
+      section: "A",
+      createdAt: "12/3/25",
     },
   ];
 

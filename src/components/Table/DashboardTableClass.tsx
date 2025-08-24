@@ -108,17 +108,17 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                             }
                           />
                         ) : null}
-                        <AvatarFallback className="bg-blue-100 text-blue-700">
+                        <AvatarFallback className="bg-blue-100 text-blue-700 ">
                           {row.user ? getInitials(row.user) : "NA"}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium  text-[14px] text-gray-900">
                           {row.user}
                         </div>
                         {row.userName && (
-                          <div className="text-gray-500 text-xs">
-                            {row.userName}
+                          <div className="text-gray-500 text-[14px]">
+                            @{row.userName}
                           </div>
                         )}
                       </div>
@@ -127,6 +127,13 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                 );
               }
 
+              if (key === "class created") {
+                return (
+                  <TableCell key={header} className="text-gray-500 text-[14px]">
+                    {row.createdAt}
+                  </TableCell>
+                );
+              }
               // ---------- DEFAULT ----------
               return (
                 <TableCell key={header} className="text-gray-900">
