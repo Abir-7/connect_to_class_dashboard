@@ -96,6 +96,7 @@ const Page = () => {
         </div>
         <div className="h-[calc(100vh-434px)] overflow-y-auto">
           <hr />
+
           <DynamicTable
             headers={headers}
             data={data}
