@@ -131,7 +131,7 @@ const Page = () => {
             <SearchCustom></SearchCustom>
           </div>
         </div>
-        <div className="h-[calc(100vh-308px)] overflow-y-auto">
+        <div className="h-[calc(100vh-318px)] overflow-y-auto">
           <hr />
           <ClassTable
             headers={headers}
