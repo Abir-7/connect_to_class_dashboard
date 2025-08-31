@@ -112,9 +112,9 @@ const Page = () => {
   return (
     <div className="p-6 space-y-10">
       <div className="flex-1  flex flex-wrap gap-4">
-        <OverviewCard />
-        <OverviewCard />
-        <OverviewCard />
+        <OverviewCard title="Total Teachers" value={2000} percentage={40} />
+        <OverviewCard title="Student" value={120} percentage={-10} />
+        <OverviewCard title="Parents" value={120} percentage={-15} />
       </div>
       <div className="border rounded-md ">
         <div className="p-6 space-y-6">
