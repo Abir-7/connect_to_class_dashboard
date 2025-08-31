@@ -16,8 +16,8 @@ import React, { useState } from "react";
 import { PaginationCustom } from "@/components/Pagination/PaginationCustom";
 import SearchCustom from "@/components/Search/SearchCustom";
 import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
-import { useParams } from "next/navigation";
 import TeacherDetailsSection from "./_components/TeacherDetails";
+import { useParams } from "next/navigation";
 const Page = () => {
   const { classId } = useParams();
   console.log(classId);

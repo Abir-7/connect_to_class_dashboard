@@ -20,7 +20,7 @@ const Login = () => {
 
   const handleSubmit = async (data: { email: string; password: string }) => {
     //const { email, password } = data;
-    router.push(`/`); // redirect after login
+    router.push(`/overview`); // redirect after login
     console.log(data);
     // try {
     //   const res = await login({ email, password }).unwrap();

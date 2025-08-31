@@ -14,13 +14,20 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
-import { Inbox, ChevronDown, ChevronRight } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Users,
+  GraduationCap,
+  CalendarDays,
+  FileKey,
+  HomeIcon,
+} from "lucide-react";
 import LogoutButton from "../../LogoutComponent/LogoutButton";
 import { TUserRoles, userRoles } from "@/interface/authinterface";
 import mainlogo from "@/assets/images/main_logo.png";
 import Image from "next/image";
 
-import { IoHome } from "react-icons/io5";
 import SearchCustom from "@/components/Search/SearchCustom";
 import { IconType } from "react-icons/lib";
 interface MenuItem {
@@ -38,32 +45,32 @@ interface MenuItem {
 const items: MenuItem[] = [
   {
     title: "Overview",
-    url: "/",
-    icon: IoHome,
+    url: "/overview",
+    icon: HomeIcon,
     roles: [...Object.values(userRoles)],
   },
   {
     title: "Users",
     url: "/users",
-    icon: Inbox,
+    icon: Users,
     roles: [userRoles.ADMIN],
   },
   {
     title: "Class",
     url: "/all_class",
-    icon: Inbox,
+    icon: GraduationCap,
     roles: [userRoles.ADMIN],
   },
   {
     title: "Event",
     url: "/event",
-    icon: Inbox,
+    icon: CalendarDays,
     roles: [userRoles.ADMIN],
   },
   {
     title: "Privacy & Policy",
     url: "/privacy_&_policy",
-    icon: Inbox,
+    icon: FileKey,
     roles: [userRoles.ADMIN],
   },
 ];
