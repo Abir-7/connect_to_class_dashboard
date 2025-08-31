@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
     switch (true) {
       case pathname === "/overview":
-        pageData = { title: "Home", description: "Welcome to our homepage" };
+        pageData = { title: "Home", description: "Welcome to homepage" };
         break;
       case pathname === "/users":
         pageData = { title: "Users", description: "All users list" };
@@ -36,7 +36,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       case pathname === "/privacy_&_policy":
         pageData = {
           title: "Privacy Policy",
-          description: "Our privacy & policy",
+          description: "View privacy & policy",
         };
         break;
     }
