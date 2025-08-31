@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     let pageData = { title: "Default", description: "" };
 
     switch (true) {
-      case pathname === "/":
+      case pathname === "/overview":
         pageData = { title: "Home", description: "Welcome to our homepage" };
         break;
       case pathname === "/users":
