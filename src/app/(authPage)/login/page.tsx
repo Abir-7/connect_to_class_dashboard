@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 
 import { useRouter } from "next/navigation";
-//import { useAppDispatch } from "@/redux/hooks";
-//import { useLoginMutation } from "@/redux/api/authApi/authApi";
-//import { addAuthData } from "@/redux/features/auth/auth";
+import { useAppDispatch } from "@/redux/hooks";
+import { useLoginMutation } from "@/redux/api/authApi/authApi";
+import { addAuthData } from "@/redux/features/auth/auth";
 
 //import { toast } from "sonner";
 import { BaseForm } from "@/components/ShadCN_Form/BaseForm";
@@ -12,52 +13,53 @@ import { FormInput } from "@/components/ShadCN_Form/FormInput";
 import Image from "next/image";
 
 import mainlogo from "@/assets/images/main_logo.png";
+import { toast } from "sonner";
 
 const Login = () => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  // const [login, { isLoading }] = useLoginMutation();
-
+  const [login, { isLoading, error }] = useLoginMutation();
+  console.log(error);
   const handleSubmit = async (data: { email: string; password: string }) => {
-    //const { email, password } = data;
-    router.push(`/`); // redirect after login
-    console.log(data);
-    // try {
-    //   const res = await login({ email, password }).unwrap();
-    //   // Assuming your backend returns { user, userProfile }
-    //   console.log(res);
-    //   if (res.success) {
-    //     await fetch("/api/auth-data", {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         token: res.data.accessToken,
-    //         email: res.data.userData.email,
-    //         role: res.data.userData.role,
-    //         id: res.data.userData._id,
-    //       }),
-    //     });
-    //     dispatch(
-    //       addAuthData({
-    //         isLoading: false,
-    //         userProfile: null,
-    //         user: {
-    //           email: res.data.userData.email,
-    //           role: res.data.userData.role,
-    //           token: res.data.accessToken,
-    //           id: res.data.userData._id,
-    //         },
-    //       })
-    //     );
+    const { email, password } = data;
+    // router.push(`/`); // redirect after login
+    // console.log(data);
+    try {
+      const res = await login({ email, password }).unwrap();
+      // Assuming your backend returns { user, userProfile }
+      console.log(res);
+      if (res.success) {
+        await fetch("/api/auth-data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: res.data.access_token,
+            email: res.data.email,
+            role: res.data.role,
+            id: res.data.user_id,
+          }),
+        });
+        dispatch(
+          addAuthData({
+            isLoading: false,
+            userProfile: null,
+            user: {
+              token: res.data.access_token,
+              email: res.data.email,
+              role: res.data.role,
+              id: res.data.user_id,
+            },
+          })
+        );
 
-    //     router.push(`/`); // redirect after login
-    //   }
-    // } catch (err: any) {
-    //   console.log(err, "fffff");
-    //   toast.error(err?.data?.message || "Something went wrong!");
-    // }
+        router.push(`/`); // redirect after login
+      }
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err?.data?.message || "Something went wrong!");
+    }
   };
 
   return (
@@ -98,8 +100,7 @@ const Login = () => {
             type="submit"
             className={`  w-full rounded-[8px] bg-[#43C5E3] text-white py-2 px-4  hover:bg-[rgb(67,197,237)]`}
           >
-            {/* {isLoading ? "Processing..." : "Sign in"} */}
-            Sign in
+            {isLoading ? "Processing..." : "Sign in"}
           </button>
         </BaseForm>
       </div>

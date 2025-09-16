@@ -118,7 +118,7 @@ function Plugins({ onChange }: PluginsProps) {
               <ContentEditable
                 placeholderClassName="absolute top-3 left-4 text-gray-400 "
                 placeholder={placeholder}
-                className="ContentEditable__root relative block h-72 overflow-auto px-4 py-3  focus:outline-none"
+                className="ContentEditable__root relative block h-[28rem] overflow-auto px-4 py-3  focus:outline-none"
               />
             }
             ErrorBoundary={LexicalErrorBoundary}

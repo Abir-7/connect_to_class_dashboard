@@ -1,45 +1,50 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/page.tsx or pages/index.tsx
 "use client";
 
-import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { RichTextEditorDemo } from "./_components/TextEditor";
-import { BaseForm } from "@/components/ShadCN_Form/BaseForm";
-import { FormInput } from "@/components/ShadCN_Form/FormInput";
+import { useGetPrivacyQuery } from "@/redux/api/privacyApi/privacyApi";
+import AddPrivacy from "./_components/AddPrivacy";
 
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import LoadingPage from "@/components/loadingScreen/LoadingPage";
 
 export default function Home() {
-  const [editorHtml, setEditorHtml] = useState("");
-  const onSubmit = async (data: any) => {
-    console.log({ ...data, editorHtml });
-  };
+  const { data, isLoading } = useGetPrivacyQuery("");
+  console.log(data?.data);
+  const privacyData = data?.data;
+
   return (
-    <div className="p-4 space-y-4">
-      <BaseForm onSubmit={onSubmit} defaultValues={{ title: "" }}>
-        <FormInput
-          name="title"
-          label="Policy Title"
-          placeholder="Title"
-        ></FormInput>
-
-        <RichTextEditorDemo onChange={setEditorHtml} />
-
-        <Button className=" h-[40px] bg-transparent hover:bg-transparent  transition-all duration-300  active:text-[#ffffff] active:bg-[#359AB1] hover:border-solid text-[#359AB1] border-[#359AB1] border py-2 w-full  text-[14px] font-semibold  border-dashed">
-          Add Policy <Plus className="font-bold" size={15}></Plus>
-        </Button>
-      </BaseForm>
-
-      {/* Live preview */}
-      <div className="mt-4 p-2 border rounded">
-        <h3 className="font-bold">Preview:</h3>
-        <div
-          className="text-sm"
-          dangerouslySetInnerHTML={{ __html: editorHtml }}
-        />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <>
+          <LoadingPage></LoadingPage>
+        </>
+      ) : (
+        <Tabs defaultValue="privacy" className=" rounded-none ">
+          <TabsList className="flex justify-center gap-2 w-full rounded-none mt-2  bg-transparent h-12 ">
+            <TabsTrigger value="privacy">Privacy</TabsTrigger>
+            <TabsTrigger value="update privacy">Update Privacy</TabsTrigger>
+          </TabsList>
+          <hr></hr>
+          <TabsContent value="privacy" className="px-6 py-4">
+            <div className="border h-[calc(100vh-180px)] rounded-md p-4  overflow-y-auto">
+              {" "}
+              <h2 className="text-xl font-semibold mb-4">
+                {privacyData?.title}
+              </h2>
+              <div
+                className="prose max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: privacyData?.editor_html || "",
+                }}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="update privacy" className="px-6 py-4">
+            <AddPrivacy></AddPrivacy>
+          </TabsContent>
+        </Tabs>
+      )}
+    </>
   );
 }

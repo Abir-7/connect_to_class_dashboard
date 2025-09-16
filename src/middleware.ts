@@ -15,16 +15,13 @@ export async function middleware(request: NextRequest) {
 
   const auth = await getAuthDataFromCookie();
   const token = auth?.token;
-  const role = auth?.role;
-
+  console.log(token);
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (pathname === "/") {
-    return NextResponse.redirect(
-      new URL(`/${role.toLowerCase()}`, request.url)
-    );
+    return NextResponse.redirect(new URL(`/overview`, request.url));
   }
 
   return NextResponse.next();

@@ -22,6 +22,7 @@ import {
   CalendarDays,
   FileKey,
   HomeIcon,
+  ClipboardEdit,
 } from "lucide-react";
 import LogoutButton from "../../LogoutComponent/LogoutButton";
 import { TUserRoles, userRoles } from "@/interface/authinterface";
@@ -71,6 +72,12 @@ const items: MenuItem[] = [
     title: "Privacy & Policy",
     url: "/privacy_&_policy",
     icon: FileKey,
+    roles: [userRoles.ADMIN],
+  },
+  {
+    title: "Assign Task",
+    url: "/task_assign",
+    icon: ClipboardEdit,
     roles: [userRoles.ADMIN],
   },
 ];
