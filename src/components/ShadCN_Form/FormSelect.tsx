@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import {
@@ -8,6 +9,13 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Option = { label: string; value: string };
 
@@ -15,12 +23,14 @@ type FormSelectProps = {
   name: string;
   label: string;
   options: Option[];
+  placeholder?: string;
 };
 
 export const FormSelect: React.FC<FormSelectProps> = ({
   name,
   label,
   options,
+  placeholder,
 }) => {
   const { control } = useFormContext();
 
@@ -32,16 +42,20 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <select {...field} className="w-full p-2 border rounded-md">
-              <option value="" disabled>
-                Select {label.toLowerCase()}
-              </option>
-              {options.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger className="w-full">
+                <SelectValue
+                  placeholder={placeholder || `Select ${label.toLowerCase()}`}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </FormControl>
           <FormMessage />
         </FormItem>

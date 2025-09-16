@@ -14,7 +14,7 @@ type FormInputProps = {
   name: string;
   label: string;
   placeholder?: string;
-  type?: "date" | "text" | "email" | "password";
+  type?: "date" | "text" | "email" | "password" | "time";
   required?: boolean;
 };
 

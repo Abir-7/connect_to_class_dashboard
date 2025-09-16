@@ -29,7 +29,7 @@ export function BaseForm<T extends FieldValues>({
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit((data) => onSubmit(data, methods.reset))}
-        className={`space-y-6 mx-2 md:mx-4 lg:mx-6  mt-8 ${className}`}
+        className={`space-y-6  ${className}`}
       >
         {children}
       </form>

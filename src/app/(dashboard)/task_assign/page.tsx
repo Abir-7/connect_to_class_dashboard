@@ -11,18 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Calendar, Clock, User, CheckCircle } from "lucide-react";
+
+import { User, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { BaseForm } from "@/components/ShadCN_Form/BaseForm";
+import { FormInput } from "@/components/ShadCN_Form/FormInput";
+import { FormTextarea } from "@/components/ShadCN_Form/FormTextarea";
+import { FormSelect } from "@/components/ShadCN_Form/FormSelect";
 
 export default function TaskAssignmentPage() {
   const [formData, setFormData] = useState({
@@ -53,10 +48,6 @@ export default function TaskAssignmentPage() {
         priority: "",
       });
     }, 2000);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   // Mock team members - in a real app, this would come from your database
@@ -110,143 +101,54 @@ export default function TaskAssignmentPage() {
               See task update
             </Link>
           </div>
-          <CardContent className="h-full ">
-            <form onSubmit={handleSubmit} className="space-y-6 h-full relative">
-              {/* Task Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title">Task Title</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter task title..."
-                  value={formData.title}
-                  onChange={(e) => handleInputChange("title", e.target.value)}
-                  required
-                />
-              </div>
+          <CardContent className="h-full mt-0">
+            <BaseForm defaultValues={{}} onSubmit={handleSubmit}>
+              <FormInput
+                label="Task Title"
+                name="title"
+                placeholder="Enter task title..."
+              ></FormInput>
+              <FormTextarea
+                label="Task Description"
+                name="description"
+              ></FormTextarea>
 
-              {/* Task Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description">Task Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Describe the task in detail..."
-                  value={formData.description}
-                  onChange={(e) =>
-                    handleInputChange("description", e.target.value)
-                  }
-                  rows={20}
-                  required
-                />
-              </div>
+              <FormInput
+                label="Due Date"
+                name="date"
+                type="date"
+                placeholder="Enter task title..."
+              ></FormInput>
 
-              {/* Assign To */}
-              <div className="space-y-2">
-                <Label htmlFor="assignedTo">Assign To</Label>
-                <Select
-                  value={formData.assignedTo}
-                  onValueChange={(value) =>
-                    handleInputChange("assignedTo", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select team member..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {teamMembers.map((member) => (
-                      <SelectItem key={member.id} value={member.id}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{member.name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {member.role}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <FormInput
+                label="Due Time"
+                name="title"
+                type="time"
+                placeholder="Enter task title..."
+              ></FormInput>
+              <FormSelect
+                name="assign_to"
+                options={[{ label: "Teacher -1", value: "1" }]}
+                label="Assign to"
+              ></FormSelect>
+              <FormSelect
+                name="Priority Level"
+                options={[
+                  { label: "Low", value: "low" },
+                  { label: "Mediam", value: "mediam" },
+                  { label: "High", value: "high" },
+                ]}
+                label="Assign to"
+              ></FormSelect>
 
-              {/* Date and Time Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="dueDate" className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Due Date
-                  </Label>
-                  <Input
-                    id="dueDate"
-                    type="date"
-                    value={formData.dueDate}
-                    onChange={(e) =>
-                      handleInputChange("dueDate", e.target.value)
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="dueTime" className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    Due Time
-                  </Label>
-                  <Input
-                    id="dueTime"
-                    type="time"
-                    value={formData.dueTime}
-                    onChange={(e) =>
-                      handleInputChange("dueTime", e.target.value)
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Priority */}
-              <div className="space-y-2">
-                <Label htmlFor="priority">Priority Level</Label>
-                <Select
-                  value={formData.priority}
-                  onValueChange={(value) =>
-                    handleInputChange("priority", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select priority..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">
-                      <span className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                        Low Priority
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="medium">
-                      <span className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                        Medium Priority
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="high">
-                      <span className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                        High Priority
-                      </span>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Submit Button */}
-              <div className="mt-20">
-                <Button
-                  type="submit"
-                  className=" h-[40px]  bg-transparent hover:bg-transparent  transition-all duration-300  active:text-[#ffffff] active:bg-[#359AB1] hover:border-solid text-[#359AB1] border-[#359AB1] border py-2 w-full text-[14px] font-semibold    border-dashed"
-                  size="lg"
-                >
-                  Assign Task
-                </Button>
-              </div>
-            </form>
+              <Button
+                type="submit"
+                className=" h-[40px]  bg-transparent hover:bg-transparent  transition-all duration-300  active:text-[#ffffff] active:bg-[#359AB1] hover:border-solid text-[#359AB1] border-[#359AB1] border py-2 w-full text-[14px] font-semibold    border-dashed"
+                size="lg"
+              >
+                Assign Task
+              </Button>
+            </BaseForm>
           </CardContent>
         </Card>
       </div>
