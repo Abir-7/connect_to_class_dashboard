@@ -138,7 +138,7 @@ export default function TaskAssignmentPage() {
                   { label: "Mediam", value: "mediam" },
                   { label: "High", value: "high" },
                 ]}
-                label="Assign to"
+                label="Priority level"
               ></FormSelect>
 
               <Button
