@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import {
   FormItem,
@@ -15,10 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 type Option = { label: string; value: string };
 
-type FormSelectProps = {
+type FormSearchableSelectProps = {
   name: string;
   label: string;
   options: Option[];
@@ -26,7 +27,7 @@ type FormSelectProps = {
   required?: boolean;
 };
 
-export const FormSelect: React.FC<FormSelectProps> = ({
+export const FormSelectWithSearch: React.FC<FormSearchableSelectProps> = ({
   name,
   label,
   options,
@@ -34,6 +35,12 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   required = false,
 }) => {
   const { control } = useFormContext();
+  const [search, setSearch] = React.useState("");
+
+  // Filter options by search term
+  const filteredOptions = options.filter((opt) =>
+    opt.label.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <Controller
@@ -54,11 +61,25 @@ export const FormSelect: React.FC<FormSelectProps> = ({
                 />
               </SelectTrigger>
               <SelectContent>
-                {options.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
+                {/* Search bar inside dropdown */}
+                <div className="p-2">
+                  <Input
+                    placeholder={`Search ${label.toLowerCase()}...`}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-sm text-muted-foreground">
+                    No results found.
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </FormControl>

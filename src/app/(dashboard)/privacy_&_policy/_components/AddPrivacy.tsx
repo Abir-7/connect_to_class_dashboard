@@ -25,7 +25,7 @@ const AddPrivacy = () => {
   };
   return (
     <div className=" space-y-4 ">
-      <div className="border h-[calc(100vh-176px)] pb-6 overflow-y-auto rounded-md">
+      <div className="border h-[calc(100vh-176px)] pb-6 overflow-y-auto rounded-md px-4 pt-4">
         <BaseForm onSubmit={onSubmit} defaultValues={{ title: "Our Privacy" }}>
           <FormInput
             name="title"

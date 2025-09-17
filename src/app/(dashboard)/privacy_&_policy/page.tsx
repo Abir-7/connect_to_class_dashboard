@@ -21,7 +21,7 @@ export default function Home() {
         </>
       ) : (
         <Tabs defaultValue="privacy" className=" rounded-none ">
-          <TabsList className="flex justify-center gap-2 w-full rounded-none mt-2  bg-transparent h-12 ">
+          <TabsList className="flex justify-center gap-2 w-full rounded-none mt-2  bg-transparent h-12 px-2 ">
             <TabsTrigger value="privacy">Privacy</TabsTrigger>
             <TabsTrigger value="update privacy">Update Privacy</TabsTrigger>
           </TabsList>

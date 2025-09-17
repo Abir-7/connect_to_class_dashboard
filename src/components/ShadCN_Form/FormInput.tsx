@@ -1,20 +1,23 @@
 "use client";
+
 import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
+import { IoEye, IoEyeOff } from "react-icons/io5";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  FormField,
   FormItem,
   FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { IoEye, IoEyeOff } from "react-icons/io5";
 
+// ----------------- FormInput -----------------
 type FormInputProps = {
   name: string;
   label: string;
   placeholder?: string;
-  type?: "date" | "text" | "email" | "password" | "time";
+  type?: "text" | "email" | "password";
   required?: boolean;
 };
 
@@ -32,42 +35,85 @@ export const FormInput: React.FC<FormInputProps> = ({
     type === "password" ? (showPassword ? "text" : "password") : type;
 
   return (
-    <FormField
-      control={control}
+    <Controller
       name={name}
-      rules={required ? { required: `${label} is required` } : undefined} // <-- validation
-      render={({ field }) => (
+      control={control}
+      rules={required ? { required: `${label} is required` } : undefined}
+      render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel
-            className={` text-[#272727] text-[16px] font-medium leading-[130%]`}
-          >
+          <FormLabel className="text-[#272727] text-[16px] font-medium leading-[130%]">
             {label}
             {required && <span className="text-red-500 ml-1">*</span>}
           </FormLabel>
+
           <FormControl>
-            <div className="flex w-full border rounded-md overflow-hidden">
-              <input
+            <div className="relative w-full">
+              <Input
                 {...field}
                 type={inputType}
                 placeholder={placeholder}
-                className={` flex-1 px-4 py-2 outline-none`}
+                className={type === "password" ? "pr-10" : ""}
               />
               {type === "password" && (
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="px-3 flex items-center justify-center border-l"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center"
                 >
                   {showPassword ? (
                     <IoEyeOff className="text-[#A3A3A3]" size={18} />
                   ) : (
-                    <IoEye size={18} className="text-[#A3A3A3]" />
+                    <IoEye className="text-[#A3A3A3]" size={18} />
                   )}
                 </button>
               )}
             </div>
           </FormControl>
-          <FormMessage />
+
+          {fieldState.error && (
+            <FormMessage>{fieldState.error.message}</FormMessage>
+          )}
+        </FormItem>
+      )}
+    />
+  );
+};
+
+// ----------------- FormTextarea -----------------
+type FormTextareaProps = {
+  name: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+};
+
+export const FormTextarea: React.FC<FormTextareaProps> = ({
+  name,
+  label,
+  placeholder,
+  required = false,
+}) => {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={required ? { required: `${label} is required` } : undefined}
+      render={({ field, fieldState }) => (
+        <FormItem>
+          <FormLabel className="text-[#272727] text-[16px] font-medium leading-[130%]">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+          </FormLabel>
+
+          <FormControl>
+            <Textarea {...field} placeholder={placeholder} />
+          </FormControl>
+
+          {fieldState.error && (
+            <FormMessage>{fieldState.error.message}</FormMessage>
+          )}
         </FormItem>
       )}
     />

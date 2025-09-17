@@ -24,7 +24,7 @@ export function ToggleGroupButton({ options, defaultValue, onChange }: Props) {
           key={opt.value}
           value={opt.value}
           aria-label={`Toggle ${opt.label}`}
-          className={`px-3 data-[state=on]:bg-gray-200 ${
+          className={`px-3 w-24 leading-6 text-sm data-[state=on]:bg-gray-200 ${
             idx !== options.length - 1 ? "border-r" : ""
           }`}
         >

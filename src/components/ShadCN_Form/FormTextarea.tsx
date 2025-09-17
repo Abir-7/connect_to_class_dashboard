@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import {
-  FormField,
   FormItem,
   FormLabel,
   FormControl,
@@ -14,26 +13,34 @@ type FormTextareaProps = {
   name: string;
   label: string;
   placeholder?: string;
+  required?: boolean;
 };
 
 export const FormTextarea: React.FC<FormTextareaProps> = ({
   name,
   label,
   placeholder,
+  required = false,
 }) => {
   const { control } = useFormContext();
 
   return (
-    <FormField
-      control={control}
+    <Controller
       name={name}
-      render={({ field }) => (
+      control={control}
+      rules={required ? { required: `${label} is required` } : undefined}
+      render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className="text-[#272727] text-[16px] font-medium leading-[130%]">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+          </FormLabel>
           <FormControl>
             <Textarea {...field} placeholder={placeholder} />
           </FormControl>
-          <FormMessage />
+          {fieldState.error && (
+            <FormMessage>{fieldState.error.message}</FormMessage>
+          )}
         </FormItem>
       )}
     />

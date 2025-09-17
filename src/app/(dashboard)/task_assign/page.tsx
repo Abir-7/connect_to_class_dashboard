@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,73 +13,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { User, CheckCircle } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { BaseForm } from "@/components/ShadCN_Form/BaseForm";
 import { FormInput } from "@/components/ShadCN_Form/FormInput";
 import { FormTextarea } from "@/components/ShadCN_Form/FormTextarea";
 import { FormSelect } from "@/components/ShadCN_Form/FormSelect";
+import { FormDatePicker } from "@/components/ShadCN_Form/FormDatePicker";
+import { FormTimePicker } from "@/components/ShadCN_Form/FormTimePicker";
+import { FormSelectWithSearch } from "@/components/ShadCN_Form/FormSelectWithSearch";
 
 export default function TaskAssignmentPage() {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    assignedTo: "",
-    dueDate: "",
-    dueTime: "",
-    priority: "",
-  });
+  const handleSubmit = (data: any) => {};
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Task assigned:", formData);
-    setIsSubmitted(true);
-
-    // Reset form after 2 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        title: "",
-        description: "",
-        assignedTo: "",
-        dueDate: "",
-        dueTime: "",
-        priority: "",
-      });
-    }, 2000);
-  };
-
-  // Mock team members - in a real app, this would come from your database
-  const teamMembers = [
-    { id: "1", name: "Alice Johnson", role: "Frontend Developer" },
-    { id: "2", name: "Bob Smith", role: "Backend Developer" },
-    { id: "3", name: "Carol Davis", role: "UI/UX Designer" },
-    { id: "4", name: "David Wilson", role: "Project Manager" },
-    { id: "5", name: "Eva Brown", role: "QA Engineer" },
+  const countryOptions = [
+    { label: "United States", value: "us" },
+    { label: "Canada", value: "ca" },
+    { label: "United Kingdom", value: "uk" },
+    { label: "Australia", value: "au" },
+    { label: "Bangladesh", value: "bd" },
+    { label: "India", value: "in" },
   ];
-
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <div className="text-center space-y-4">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-              <h2 className="text-2xl font-semibold text-foreground">
-                Task Assigned!
-              </h2>
-              <p className="text-muted-foreground">
-                The task has been successfully assigned to{" "}
-                {teamMembers.find((m) => m.id === formData.assignedTo)?.name}.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-background p-6  h-[calc(100vh-160px)]">
@@ -102,36 +57,49 @@ export default function TaskAssignmentPage() {
             </Link>
           </div>
           <CardContent className="h-full mt-0">
-            <BaseForm defaultValues={{}} onSubmit={handleSubmit}>
+            <BaseForm
+              defaultValues={{
+                title: "",
+                description: "",
+                due_date: "",
+                due_time: "",
+                assign_to: "",
+                priority: "low",
+              }}
+              onSubmit={handleSubmit}
+            >
               <FormInput
+                required
                 label="Task Title"
                 name="title"
                 placeholder="Enter task title..."
               ></FormInput>
               <FormTextarea
+                placeholder="Enter task description..."
+                required
                 label="Task Description"
                 name="description"
               ></FormTextarea>
 
-              <FormInput
+              <FormDatePicker
+                required
+                name="due_date"
                 label="Due Date"
-                name="date"
-                type="date"
-                placeholder="Enter task title..."
-              ></FormInput>
-
-              <FormInput
+              ></FormDatePicker>
+              <FormTimePicker
+                required
+                name="due_date"
                 label="Due Time"
-                name="title"
-                type="time"
-                placeholder="Enter task title..."
-              ></FormInput>
-              <FormSelect
+              ></FormTimePicker>
+              <FormSelectWithSearch
+                required
                 name="assign_to"
-                options={[{ label: "Teacher -1", value: "1" }]}
                 label="Assign to"
-              ></FormSelect>
+                options={countryOptions}
+                placeholder="Select a teacher"
+              ></FormSelectWithSearch>
               <FormSelect
+                required
                 name="Priority Level"
                 options={[
                   { label: "Low", value: "low" },
