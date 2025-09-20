@@ -13,24 +13,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface DynamicTableProps {
   headers: string[];
   data: Record<string, any>[];
-  avatarField?: string; // field in data for avatar image
-  badgeField?: string; // field in data for badge
-  getBadgeClasses?: (type: string) => string; // external badge function
+  avatarField?: string;
+  badgeField?: string;
+  getBadgeClasses?: (type: string) => string;
 }
-
-// Example external badge function
-export const getBadgeClasses = (type: string) => {
-  switch (type) {
-    case "Teacher":
-      return "bg-purple-100 text-purple-800";
-    case "Parents":
-      return "bg-green-100 text-green-800";
-    case "Students":
-      return "bg-blue-100 text-blue-800";
-    default:
-      return "";
-  }
-};
 
 export const DynamicTable: React.FC<DynamicTableProps> = ({
   headers,
@@ -39,19 +25,31 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
   badgeField,
   getBadgeClasses,
 }) => {
-  const getInitials = (name: string) =>
-    name
-      .split(" ")
-      .map((w) => w[0])
+  // Improved getInitials function
+  const getInitials = (name: string) => {
+    if (!name) return "NA";
+
+    // Split on spaces, ignore empty strings
+    const words = name.split(" ").filter((w) => w.trim());
+
+    // Take first letter of each word, remove dot if present
+    const initials = words
+      .map((w) => w[0].replace(/\./g, "")) // remove any dots
+      .slice(0, 2) // take first 2 letters (you can remove slice to take all)
       .join("")
       .toUpperCase();
 
+    return initials || "NA";
+  };
   return (
     <Table>
       <TableHeader className="bg-gray-50">
         <TableRow>
-          {headers.map((header) => (
-            <TableHead key={header} className="font-medium text-gray-600">
+          {headers.map((header, colIndex) => (
+            <TableHead
+              key={`header-${colIndex}`}
+              className="font-medium text-gray-600"
+            >
               {header}
             </TableHead>
           ))}
@@ -59,71 +57,107 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
       </TableHeader>
 
       <TableBody>
-        {data.map((row, index) => (
-          <TableRow
-            key={row.id || row.email || index}
-            className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-          >
-            {headers.map((header) => {
-              const key = header.toLowerCase();
-              const value = row[key] || "";
+        {data && data.length > 0 ? (
+          data.map((row, rowIndex) => (
+            <TableRow
+              key={`row-${rowIndex}`} // safe, unique
+              className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}
+            >
+              {headers.map((header, colIndex) => {
+                const key = header.toLowerCase();
 
-              // Name column with avatar + username
-              if (key === "name") {
-                return (
-                  <TableCell key={header}>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        {row[avatarField || "image"] ? (
-                          <AvatarImage
-                            src={row[avatarField || "image"]}
-                            alt={row.name || ""}
-                          />
-                        ) : (
+                // Name column with avatar
+                if (key === "name") {
+                  return (
+                    <TableCell key={`cell-${rowIndex}-${colIndex}`}>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          {row[avatarField || "image"] ? (
+                            <AvatarImage
+                              src={row[avatarField || "image"]}
+                              alt={row.full_name || ""}
+                              onError={(e) => {
+                                // When image fails, replace with fallback
+                                (e.target as HTMLImageElement).style.display =
+                                  "none";
+                              }}
+                            />
+                          ) : null}
+
                           <AvatarFallback className="bg-blue-100 text-blue-700">
-                            {row.name ? getInitials(row.name) : "NA"}
+                            {getInitials(row.full_name)}
                           </AvatarFallback>
-                        )}
-                      </Avatar>
-                      <div>
-                        <div className="font-medium text-gray-900">
-                          {row.name}
-                        </div>
-                        {row.username && (
-                          <div className="text-gray-500 text-xs">
-                            {row.username}
+                        </Avatar>
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {row.full_name || "N/A"}
                           </div>
-                        )}
+                          {row.nick_name && (
+                            <div className="text-gray-500 text-xs">
+                              {row.nick_name}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                );
-              }
+                    </TableCell>
+                  );
+                }
 
-              // Badge column
-              if (badgeField && key === badgeField.toLowerCase()) {
-                return (
-                  <TableCell key={header}>
-                    <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        getBadgeClasses?.(row[badgeField]) || ""
-                      }`}
+                // Badge column (role / user type)
+                if (
+                  badgeField &&
+                  (key === badgeField.toLowerCase() || key === "user type")
+                ) {
+                  return (
+                    <TableCell key={`cell-${rowIndex}-${colIndex}`}>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                          getBadgeClasses?.(row[badgeField]) ||
+                          "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {row[badgeField]?.toUpperCase() ?? "N/A"}
+                      </span>
+                    </TableCell>
+                  );
+                }
+
+                // Joining Date
+                if (key === "joining date") {
+                  return (
+                    <TableCell
+                      key={`cell-${rowIndex}-${colIndex}`}
+                      className="text-gray-500"
                     >
-                      {row[badgeField]}
-                    </span>
+                      {row.joiningdate
+                        ? new Date(row.joiningdate).toLocaleDateString()
+                        : "N/A"}
+                    </TableCell>
+                  );
+                }
+
+                // Default column
+                return (
+                  <TableCell
+                    key={`cell-${rowIndex}-${colIndex}`}
+                    className="text-gray-500"
+                  >
+                    {row[key] ?? "N/A"}
                   </TableCell>
                 );
-              }
-
-              // Default column
-              return (
-                <TableCell key={header} className="text-gray-500">
-                  {value}
-                </TableCell>
-              );
-            })}
+              })}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={headers.length}
+              className="text-center text-gray-500"
+            >
+              No users found
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
