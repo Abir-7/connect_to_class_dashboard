@@ -94,7 +94,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
               }
 
               // ---------- USER COLUMN ----------
-              if (key === "user") {
+              if (key === "teacher") {
                 return (
                   <TableCell key={header}>
                     <div className="flex items-center gap-3">

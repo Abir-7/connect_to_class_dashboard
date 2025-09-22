@@ -10,6 +10,8 @@ import SearchCustom from "@/components/Search/SearchCustom";
 import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
 import { useGetAllUsersQuery } from "@/redux/api/overviewApi/overviewApi";
 import LoadingPage from "@/components/loadingScreen/LoadingPage";
+import LoadingTable from "@/components/loadingScreen/loadingTable";
+import { useDebounce } from "@/utils/helper/debounce";
 
 // ✅ IMeta type
 interface IMeta {
@@ -24,15 +26,16 @@ const Page = () => {
     "ALL" | "TEACHER" | "STUDENT" | "PARENT"
   >("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 600);
   const [page, setPage] = useState(1);
 
   // Map toggle to backend role param
   const roleParam = selectedToggle; // All already in uppercase
 
   // Fetch data from API
-  const { data, isLoading } = useGetAllUsersQuery({
+  const { data, isFetching, isLoading } = useGetAllUsersQuery({
     role: roleParam,
-    search_term: searchTerm,
+    search_term: debouncedSearchTerm,
     page,
   });
 
@@ -106,14 +109,21 @@ const Page = () => {
 
             <div className="h-[calc(100vh-320px)] overflow-y-auto">
               <hr />
-              <DynamicTable
-                headers={headers}
-                data={allData}
-                avatarField="image"
-                badgeField="role"
-                getBadgeClasses={getBadgeClasses}
-              />
-              <hr />
+              {isFetching ? (
+                <LoadingTable></LoadingTable>
+              ) : (
+                <>
+                  {" "}
+                  <DynamicTable
+                    headers={headers}
+                    data={allData}
+                    avatarField="image"
+                    badgeField="role"
+                    getBadgeClasses={getBadgeClasses}
+                  />
+                  <hr />
+                </>
+              )}
             </div>
 
             <div className="h-16 flex justify-center items-center">
