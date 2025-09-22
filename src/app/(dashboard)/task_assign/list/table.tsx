@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import dayjs from "dayjs";
 
 export interface AssignedUser {
   _id: string;
@@ -156,7 +157,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ headers, data }) => {
               if (key === "duedate") {
                 return (
                   <TableCell key={header} className="text-gray-500">
-                    {task.due_date}
+                    {dayjs(task.due_date).format("YYYY-MM-DD")}
                     <div className="text-xs">{task.due_time}</div>
                   </TableCell>
                 );

@@ -15,6 +15,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import EventModal from "./EventModal";
 import { EventRow } from "@/app/(dashboard)/event/page";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface EventTableProps {
   headers: string[];
@@ -161,7 +162,11 @@ export const EventTable: React.FC<EventTableProps> = ({
 
       {/* ShadCN Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md  overflow-hidden ">
+        <DialogTitle></DialogTitle>
+        <DialogContent
+          aria-describedby={undefined}
+          className="max-w-md  overflow-hidden "
+        >
           {selectedRow && <EventModal row={selectedRow} />}
         </DialogContent>
       </Dialog>

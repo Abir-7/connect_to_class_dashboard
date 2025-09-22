@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+//import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Clock } from "lucide-react";
 import React from "react";
@@ -23,28 +23,29 @@ const EventModal: React.FC<EventModalProps> = ({ row }) => {
     <>
       {/* Header Section */}
       <div className="p-4 pb-2">
-        <div className="flex items-center justify-between ">
-          <span className="text-xs text-muted-foreground">Created By</span>
-          <div className="text-right">
-            <div className="text-xs text-muted-foreground">Class:</div>
-            <div className="font-semibold text-base">{row.event}</div>
+        <div className="flex  justify-between ">
+          <div className="flex items-center gap-2 ">
+            <Avatar className="h-8 w-8">
+              {row.image ? (
+                <AvatarImage
+                  src={row.image}
+                  alt={row.user}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
+                />
+              ) : null}
+              <AvatarFallback>{getInitials(row.user)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="font-medium text-sm">{row.user}</div>
+              <div className="text-xs text-muted-foreground">
+                @{row.userName}
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 ">
-          <Avatar className="h-8 w-8">
-            {row.image ? (
-              <AvatarImage
-                src={row.image}
-                alt={row.user}
-                onError={(e) => (e.currentTarget.style.display = "none")}
-              />
-            ) : null}
-            <AvatarFallback>{getInitials(row.user)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="font-medium text-sm">{row.user}</div>
-            <div className="text-xs text-muted-foreground">@{row.userName}</div>
+          <div className="text-right">
+            <div className=" text-muted-foreground text-sm">
+              {row.className}
+            </div>
           </div>
         </div>
       </div>
@@ -122,15 +123,19 @@ const EventModal: React.FC<EventModalProps> = ({ row }) => {
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm text-muted-foreground">Days Remaining</span>
           <span className="text-red-500 text-sm font-medium">
-            {row.days_remaining ?? "N/A"} Days left
+            {row.days_remaining !== undefined
+              ? row.days_remaining < 0
+                ? "Ended"
+                : `${row.days_remaining} Days left`
+              : "N/A"}
           </span>
         </div>
 
         {/* Add to Calendar Button */}
-        <Button className="w-full h-9 bg-cyan-400 hover:bg-cyan-500 text-white text-sm">
+        {/* <Button className="w-full h-9 bg-cyan-400 hover:bg-cyan-500 text-white text-sm">
           <Calendar className="h-3.5 w-3.5 mr-1.5" />
           Add to calendar
-        </Button>
+        </Button> */}
       </div>
     </>
   );

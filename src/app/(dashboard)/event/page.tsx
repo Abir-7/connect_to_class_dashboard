@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { useState, useMemo } from "react";
-
 import { PaginationCustom } from "@/components/Pagination/PaginationCustom";
 import SearchCustom from "@/components/Search/SearchCustom";
 import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
 import { EventTable } from "@/components/Table/EventTable/DashboardTableEvent";
+import { useGetAllEventQuery } from "@/redux/api/classApi/classApi";
+import { useDebounce } from "@/utils/helper/debounce";
+import LoadingTable from "@/components/loadingScreen/loadingTable";
+import LoadingPage from "@/components/loadingScreen/LoadingPage";
 
 export interface EventRow {
-  id: number;
+  createdBy: string;
+  className: string;
+  id: string;
   event: string;
   description: string;
   eventImage?: string;
@@ -20,146 +26,119 @@ export interface EventRow {
   end_date: string;
   start_time: string;
   end_time: string;
-  category?: string;
   days_remaining?: number;
-  location?: string;
 }
+const formatTimestampDate = (ms: number) => {
+  const d = new Date(ms);
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const year = d.getUTCFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 const Page = () => {
   const [selectedToggle, setToggle] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const searchText = useDebounce(searchTerm, 500);
+  // Fetch events using RTK Query
+  const { data, isLoading, isError, isFetching } = useGetAllEventQuery({
+    type: selectedToggle.toLowerCase(),
+    search_term: searchText,
+    page,
+  });
+
+  // Map API data to EventRow format
+  const events: EventRow[] = useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((e: any) => ({
+      createdBy: e.profile_full_name,
+      id: e._id,
+      className: e.class_name,
+      event: e.event_name,
+      description: e.description,
+      eventImage: e.image,
+      user: e.profile_full_name,
+      userName: e.user_email.split("@")[0],
+      image: e.profile_image,
+      start_date: formatTimestampDate(e.start_date),
+      end_date: formatTimestampDate(e.end_date),
+      start_time: e.start_time,
+      end_time: e.end_time,
+      days_remaining: Math.ceil(
+        (e.end_date - Date.now()) / (1000 * 60 * 60 * 24)
+      ),
+    }));
+  }, [data]);
+
+  const meta = {
+    totalItem: data?.meta?.total_item || 0,
+    totalPage: data?.meta?.total_page || 1,
+    limit: data?.meta?.limit || 10,
+    page,
+  };
 
   const headers = ["Event", "Created by", "Start date", "End date"];
 
-  const allData: EventRow[] = [
-    {
-      id: 1,
-      event: "Conference 2025",
-      description:
-        "An annual conference discussing the latest in technology, startups, and innovation.",
-      eventImage:
-        "https://static.vecteezy.com/system/resources/thumbnails/036/397/588/small_2x/ai-generated-concert-crowd-in-front-of-a-big-stage-with-lights-and-smoke-photo.jpeg",
-      user: "Charlie",
-      userName: "dasd",
-      image: "/charlie.png",
-      start_date: "2025-09-01",
-      end_date: "2025-09-03",
-      start_time: "10:30 AM",
-      end_time: "6:30 PM",
-      category: "Dancing Star-A",
-      days_remaining: 10,
-      location: "New York City",
-    },
-    {
-      id: 2,
-      event: "Tech Meetup",
-      description: "A meetup for local developers.",
-      user: "Alice",
-      userName: "alice",
-      start_date: "2025-08-01",
-      end_date: "2025-08-01",
-      start_time: "2:00 PM",
-      end_time: "5:00 PM",
-      category: "Developers",
-      days_remaining: -5,
-      location: "San Francisco",
-    },
-    {
-      id: 3,
-      event: "Dance Workshop",
-      description: "Learn the latest dance moves.",
-      user: "Bob",
-      userName: "bob",
-      start_date: "2025-10-05",
-      end_date: "2025-10-07",
-      start_time: "1:00 PM",
-      end_time: "4:00 PM",
-      category: "Dancing",
-      days_remaining: 40,
-      location: "Los Angeles",
-    },
-  ];
-
-  const [meta, setMeta] = useState({
-    totalItem: allData.length,
-    totalPage: Math.ceil(allData.length / 5),
-    limit: 5,
-    page: 1,
-  });
-
-  // Filter and paginate data
-  const filteredData = useMemo(() => {
-    let data = allData;
-
-    // Toggle filter
-    const today = new Date();
-    if (selectedToggle === "Upcoming") {
-      data = data.filter((d) => new Date(d.start_date) >= today);
-    } else if (selectedToggle === "Completed") {
-      data = data.filter((d) => new Date(d.end_date) < today);
-    }
-
-    // Search filter
-    if (searchTerm) {
-      data = data.filter(
-        (d) =>
-          d.event.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          d.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    const totalItem = data.length;
-    const totalPage = Math.ceil(totalItem / meta.limit);
-    setMeta((prev) => ({ ...prev, totalItem, totalPage }));
-
-    const start = (meta.page - 1) * meta.limit;
-    return data.slice(start, start + meta.limit);
-  }, [selectedToggle, searchTerm, meta.page, meta.limit]);
-
-  const handlePageChange = (newPage: number) => {
-    setMeta((prev) => ({ ...prev, page: newPage }));
-  };
-
   return (
-    <div className="p-6 space-y-10">
-      <div className="border rounded-md">
-        <div className="p-6 space-y-6">
-          <div className="text-[18px] font-[500]">
-            {selectedToggle === "All" ? "All Events" : selectedToggle}
-          </div>
-          <div className="flex items-center justify-between">
-            <ToggleGroupButton
-              options={[
-                { label: "All Events", value: "All" },
-                { label: "Upcoming", value: "Upcoming" },
-                { label: "Completed", value: "Completed" },
-              ]}
-              onChange={(val) => {
-                setToggle(val);
-                setMeta((prev) => ({ ...prev, page: 1 }));
-              }}
-            />
-            <SearchCustom
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setMeta((prev) => ({ ...prev, page: 1 }));
-              }}
-            />
-          </div>
-        </div>
+    <>
+      {isLoading ? (
+        <LoadingPage></LoadingPage>
+      ) : (
+        <div className="p-6 space-y-10">
+          <div className="border rounded-md">
+            <div className="p-6 space-y-6">
+              <div className="text-[18px] font-[500]">
+                {selectedToggle === "All" ? "All Events" : selectedToggle}
+              </div>
+              <div className="flex items-center justify-between">
+                <ToggleGroupButton
+                  defaultValue="All"
+                  options={[
+                    { label: "All Events", value: "All" },
+                    { label: "Upcoming", value: "Upcoming" },
+                    { label: "Completed", value: "Completed" },
+                  ]}
+                  onChange={(val) => {
+                    setToggle(val);
+                    setPage(1);
+                  }}
+                />
+                <SearchCustom
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setPage(1);
+                  }}
+                />
+              </div>
+            </div>
 
-        <div className="h-[calc(100vh-320px)] overflow-y-auto">
-          <hr />
-          <EventTable headers={headers} data={filteredData} />
-          <hr />
-        </div>
+            <div className="h-[calc(100vh-320px)] overflow-y-auto">
+              <hr />
+              {isFetching ? (
+                <LoadingTable></LoadingTable>
+              ) : isError ? (
+                <div className="text-center text-red-500 py-4">
+                  Failed to load events
+                </div>
+              ) : events.length === 0 ? (
+                <div className="text-center text-gray-500 py-4">
+                  No events found
+                </div>
+              ) : (
+                <EventTable headers={headers} data={events} />
+              )}
+              <hr />
+            </div>
 
-        <div className="h-16 flex justify-center items-center">
-          <PaginationCustom meta={meta} onPageChange={handlePageChange} />
+            <div className="h-16 flex justify-center items-center">
+              <PaginationCustom meta={meta} onPageChange={setPage} />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

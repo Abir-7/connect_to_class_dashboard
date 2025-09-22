@@ -6,8 +6,10 @@ import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addPageTitle } from "@/redux/features/pageTitle/pageTitle";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import { useGetMeQuery } from "@/redux/api/authApi/authApi";
 //import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-
+import img from "@/assets/images/admin.png";
+import Image from "next/image";
 const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
@@ -55,6 +57,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
     dispatch(addPageTitle(pageData));
   }, [pathname, dispatch]);
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const { data } = useGetMeQuery("", { skip: !user?.token });
+  console.log(data);
   return (
     <ProtectedRoute>
       <div className="h-full">
@@ -72,8 +79,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 </div>
               </div>
               <div className="flex justify-center items-center gap-2">
-                <p className="font-semibold">Hello, Abir</p>
-                <div className="w-10 h-10 bg-gray-950 rounded-full"></div>
+                <p className="font-semibold">Hello, {data?.data.full_name}</p>
+
+                <Image
+                  className="w-9 h-9  me-2 rounded-full"
+                  alt=""
+                  src={img}
+                  width={40}
+                  height={40}
+                ></Image>
               </div>
             </div>
 

@@ -41,6 +41,11 @@ const Login = () => {
             id: res.data.user_id,
           }),
         });
+
+        if (res.data.role !== "ADMIN") {
+          throw new Error("Can't Login.");
+        }
+
         dispatch(
           addAuthData({
             isLoading: false,

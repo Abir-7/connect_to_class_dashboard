@@ -25,6 +25,9 @@ type FormSearchableSelectProps = {
   options: Option[];
   placeholder?: string;
   required?: boolean;
+  search: string; // search state from parent
+  setSearch: (value: string) => void; // update function from parent
+  loading?: boolean; // optional: show loading indicator
 };
 
 export const FormSelectWithSearch: React.FC<FormSearchableSelectProps> = ({
@@ -33,14 +36,16 @@ export const FormSelectWithSearch: React.FC<FormSearchableSelectProps> = ({
   options,
   placeholder,
   required = false,
+  search,
+  setSearch,
+  loading = false,
 }) => {
   const { control } = useFormContext();
-  const [search, setSearch] = React.useState("");
 
-  // Filter options by search term
-  const filteredOptions = options.filter((opt) =>
-    opt.label.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+  };
 
   return (
     <Controller
@@ -61,17 +66,31 @@ export const FormSelectWithSearch: React.FC<FormSearchableSelectProps> = ({
                 />
               </SelectTrigger>
               <SelectContent>
-                {/* Search bar inside dropdown */}
+                {/* Search input */}
                 <div className="p-2">
                   <Input
+                    key="search-input"
                     placeholder={`Search ${label.toLowerCase()}...`}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    defaultValue={search}
+                    onChange={handleSearchChange}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                    }}
                   />
                 </div>
-                {filteredOptions.length > 0 ? (
-                  filteredOptions.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
+
+                {/* Options or loading / no results */}
+                {loading ? (
+                  <div className="p-2 text-sm text-muted-foreground">
+                    Loading...
+                  </div>
+                ) : options.length > 0 ? (
+                  options.map((opt) => (
+                    <SelectItem
+                      autoFocus={false}
+                      key={opt.value}
+                      value={opt.value}
+                    >
                       {opt.label}
                     </SelectItem>
                   ))

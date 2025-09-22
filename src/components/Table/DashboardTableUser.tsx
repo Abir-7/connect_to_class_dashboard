@@ -74,8 +74,10 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
                         <Avatar className="h-8 w-8">
                           {row[avatarField || "image"] ? (
                             <AvatarImage
-                              src={row[avatarField || "image"]}
-                              alt={row.full_name || ""}
+                              src={
+                                row[avatarField as string] || `${row["image"]}`
+                              }
+                              alt={row.name || ""}
                               onError={(e) => {
                                 // When image fails, replace with fallback
                                 (e.target as HTMLImageElement).style.display =
@@ -85,12 +87,12 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
                           ) : null}
 
                           <AvatarFallback className="bg-blue-100 text-blue-700">
-                            {getInitials(row.full_name)}
+                            {getInitials(row.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="font-medium text-gray-900">
-                            {row.full_name || "N/A"}
+                            {row.name || "N/A"}
                           </div>
                           {row.nick_name && (
                             <div className="text-gray-500 text-xs">
