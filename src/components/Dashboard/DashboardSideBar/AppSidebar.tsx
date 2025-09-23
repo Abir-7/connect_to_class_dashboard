@@ -29,7 +29,7 @@ import { TUserRoles, userRoles } from "@/interface/authinterface";
 import mainlogo from "@/assets/images/main_logo.png";
 import Image from "next/image";
 
-import SearchCustom from "@/components/Search/SearchCustom";
+//import SearchCustom from "@/components/Search/SearchCustom";
 import { IconType } from "react-icons/lib";
 interface MenuItem {
   title: string;
@@ -108,10 +108,9 @@ export function AppSidebar() {
 
         <SidebarContent className="px-2 bg-[#FFFFFF]">
           {/* Search */}
-          <SidebarGroup>
+          {/* <SidebarGroup>
             <SearchCustom></SearchCustom>
-          </SidebarGroup>
-
+          </SidebarGroup> */}
           {/* Menu */}
           <SidebarGroup className="bg-[#FFFFFF]">
             <SidebarGroupContent>

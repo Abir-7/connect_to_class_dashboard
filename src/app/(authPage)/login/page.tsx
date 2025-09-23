@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
@@ -18,17 +18,24 @@ import { toast } from "sonner";
 const Login = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [login, { error }] = useLoginMutation();
   console.log(error);
+
+  const [isLoading, setLoading] = useState(false);
+
   const handleSubmit = async (data: { email: string; password: string }) => {
     const { email, password } = data;
     // router.push(`/`); // redirect after login
     // console.log(data);
     try {
+      setLoading(true);
       const res = await login({ email, password }).unwrap();
       // Assuming your backend returns { user, userProfile }
       console.log(res);
       if (res.success) {
+        if (res.data.role !== "ADMIN") {
+          throw new Error("Can't Login.");
+        }
         await fetch("/api/auth-data", {
           method: "POST",
           headers: {
@@ -41,10 +48,6 @@ const Login = () => {
             id: res.data.user_id,
           }),
         });
-
-        if (res.data.role !== "ADMIN") {
-          throw new Error("Can't Login.");
-        }
 
         dispatch(
           addAuthData({
@@ -60,8 +63,10 @@ const Login = () => {
         );
 
         router.push(`/`); // redirect after login
+        setLoading(false);
       }
     } catch (err: any) {
+      setLoading(false);
       console.log(err);
       toast.error(err?.data?.message || "Something went wrong!");
     }

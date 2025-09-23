@@ -11,10 +11,10 @@ const LogoutButton = () => {
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
+    dispatch(removeAuth());
     await fetch("/api/auth-data", {
       method: "DELETE",
     });
-    dispatch(removeAuth());
   };
 
   return (

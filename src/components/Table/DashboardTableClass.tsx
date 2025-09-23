@@ -34,6 +34,8 @@ export const ClassTable: React.FC<ClassTableProps> = ({
   imageField = "image",
   getClassLink,
 }) => {
+  console.log(data, "class");
+
   return (
     <Table>
       <TableHeader className="bg-gray-50">
@@ -64,6 +66,7 @@ export const ClassTable: React.FC<ClassTableProps> = ({
                       <Avatar className="h-8 w-8">
                         {row[classImageField] ? (
                           <AvatarImage
+                            crossOrigin="anonymous"
                             src={row[classImageField]}
                             alt={row.class || ""}
                             onError={(e) =>

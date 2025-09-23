@@ -4,6 +4,8 @@ import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import { useGetTeacherOfClassQuery } from "@/redux/api/classApi/classApi";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const TeacherDetailsSection = ({ classId }: { classId: string }) => {
   // call API
@@ -62,6 +64,9 @@ const TeacherDetailsSection = ({ classId }: { classId: string }) => {
       <div className="flex justify-between">
         {/* Avatar + Name */}
         <div className="flex items-center gap-4 ">
+          <Link href="/all-class">
+            <ArrowLeft size={20}></ArrowLeft>
+          </Link>
           <Avatar className="h-10 w-10">
             {teacher.image ? (
               <AvatarImage

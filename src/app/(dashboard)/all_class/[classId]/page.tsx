@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -10,7 +11,7 @@ import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
 import TeacherDetailsSection from "./_components/TeacherDetails";
 import { useParams } from "next/navigation";
 
-import dayjs from "dayjs"; // for formatting dates
+import dayjs from "dayjs";
 import { useGetClassMembersQuery } from "@/redux/api/classApi/classApi";
 import { useDebounce } from "@/utils/helper/debounce";
 import LoadingTable from "@/components/loadingScreen/loadingTable";
@@ -21,11 +22,10 @@ const Page = () => {
 
   const [selectedToggle, setToggle] = useState<"student" | "parent">("student");
   const [searchTerm, setSearchTerm] = useState("");
-
   const searchText = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
 
-  // Fetch data
+  // Fetch members
   const { data, isLoading, isFetching } = useGetClassMembersQuery({
     classId: classId as string,
     role: selectedToggle,
@@ -34,6 +34,7 @@ const Page = () => {
   });
 
   const members = data?.data || [];
+
   const normalizedMeta = {
     totalItem: data?.meta?.total_item ?? 0,
     totalPage: data?.meta?.total_page ?? 1,
@@ -41,16 +42,19 @@ const Page = () => {
     page: data?.meta?.page ?? 1,
   };
 
-  const headers = ["Name", "Email", "JoiningDate", "UserType"];
+  // Match headers to DynamicTable logic
+  const headers = ["Name", "Email", "Joining Date", "User Type"];
 
-  const tableData = members.map((m) => ({
-    name: m.full_name,
-    email: m.email || "N/A", // fallback if no email
+  // Normalize table data to match DynamicTable keys
+  const tableData = members.map((m: any) => ({
+    full_name: m.full_name,
+    nick_name: m.nick_name ?? null,
+    email: m.email || "N/A",
     joiningdate: dayjs(m.joined_date).format("MMM D, YYYY"),
-    usertype: m.role,
+    "user type": m.role,
     image: m.image,
   }));
-  console.log(tableData);
+
   const getBadgeClasses = (type: string) => {
     switch (type) {
       case "teacher":
@@ -60,16 +64,14 @@ const Page = () => {
       case "student":
         return "bg-blue-100 text-blue-800";
       default:
-        return "";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   return (
     <>
       {isLoading ? (
-        <>
-          <LoadingPage></LoadingPage>
-        </>
+        <LoadingPage />
       ) : (
         <div className="p-6 space-y-10">
           <div className="border rounded-md">
@@ -102,14 +104,14 @@ const Page = () => {
             <div className="h-[calc(100vh-434px)] overflow-y-auto">
               <hr />
               {isFetching ? (
-                <LoadingTable></LoadingTable>
+                <LoadingTable />
               ) : (
                 <>
                   <DynamicTable
                     headers={headers}
                     data={tableData}
                     avatarField="image"
-                    badgeField="usertype"
+                    badgeField="user type"
                     getBadgeClasses={getBadgeClasses}
                   />
                   <hr />

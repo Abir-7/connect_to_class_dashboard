@@ -85,6 +85,7 @@ const Page = () => {
               </div>
               <div className="flex items-center justify-between">
                 <ToggleGroupButton
+                  defaultValue="ALL"
                   options={[
                     { label: "All Users", value: "ALL" },
                     { label: "Teacher", value: "TEACHER" },
