@@ -19,6 +19,7 @@ export const taskApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Tasks"],
     }),
     getTeacherOptions: builder.query<
       { label: string; value: string }[], // expected response type
@@ -29,6 +30,7 @@ export const taskApi = baseApi.injectEndpoints({
         if (search_term) params.append("search_term", search_term);
         return `/dashboard/get-teacher-option?${params.toString()}`;
       },
+
       transformResponse: (response: any) => response.data,
     }),
 
@@ -46,6 +48,7 @@ export const taskApi = baseApi.injectEndpoints({
 
         return `/task/all-task?${params.toString()}`;
       },
+      providesTags: ["Tasks"],
     }),
   }),
   overrideExisting: false,

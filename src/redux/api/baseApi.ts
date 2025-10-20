@@ -14,7 +14,7 @@ const customBaseQuery: BaseQueryFn<any, unknown, FetchBaseQueryError> = async (
   extraOptions
 ) => {
   const rawBaseQuery = fetchBaseQuery({
-    baseUrl: `https://01t71ck4-4012.inc1.devtunnels.ms/api`, // change to your actual API URL
+    baseUrl: `http://10.10.12.62:4012/api`, // change to your actual API URL
     credentials: "include", // include cookies in requests
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth?.user?.token;
@@ -47,6 +47,6 @@ const customBaseQuery: BaseQueryFn<any, unknown, FetchBaseQueryError> = async (
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: customBaseQuery,
-  tagTypes: ["privacy"],
+  tagTypes: ["privacy", "Tasks"],
   endpoints: () => ({}), // extend in feature files
 });
