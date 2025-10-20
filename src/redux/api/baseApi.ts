@@ -14,7 +14,7 @@ const customBaseQuery: BaseQueryFn<any, unknown, FetchBaseQueryError> = async (
   extraOptions
 ) => {
   const rawBaseQuery = fetchBaseQuery({
-    baseUrl: `https://01t71ck4-4012.inc1.devtunnels.ms`, // change to your actual API URL
+    baseUrl: `https://01t71ck4-4012.inc1.devtunnels.ms/api`, // change to your actual API URL
     credentials: "include", // include cookies in requests
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth?.user?.token;
