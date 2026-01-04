@@ -25,12 +25,12 @@ export async function GET(): Promise<NextResponse<AuthCookie | null>> {
 export async function DELETE(): Promise<NextResponse> {
   const cookieStore = await cookies();
 
-  cookieStore.set("auth", "", {
+  cookieStore.set({
+    name: "auth",
+    value: "",
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
     path: "/",
-    maxAge: 0, // Expire immediately
+    maxAge: 0,
   });
 
   return NextResponse.json({ message: "Auth cookie removed" }, { status: 200 });
@@ -43,12 +43,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const cookieStore = await cookies();
 
-  cookieStore.set("auth", authPayload, {
+  cookieStore.set({
+    name: "auth",
+    value: authPayload,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
     path: "/",
-    maxAge: 60 * 24 * 60 * 60, // 60 days
+    maxAge: 60 * 60 * 24,
   });
 
   return NextResponse.json({ message: "Auth cookie saved" }, { status: 200 });

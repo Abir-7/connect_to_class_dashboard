@@ -9,7 +9,7 @@ import { PaginationCustom } from "@/components/Pagination/PaginationCustom";
 import SearchCustom from "@/components/Search/SearchCustom";
 import { ToggleGroupButton } from "@/components/Toogle/ToogleGroup/ToggleGroup";
 import { useGetAllUsersQuery } from "@/redux/api/overviewApi/overviewApi";
-import LoadingPage from "@/components/loadingScreen/LoadingPage";
+
 import LoadingTable from "@/components/loadingScreen/loadingTable";
 import { useDebounce } from "@/utils/helper/debounce";
 
@@ -33,7 +33,7 @@ const Page = () => {
   const roleParam = selectedToggle; // All already in uppercase
 
   // Fetch data from API
-  const { data, isFetching, isLoading } = useGetAllUsersQuery({
+  const { data, isFetching } = useGetAllUsersQuery({
     role: roleParam,
     search_term: debouncedSearchTerm,
     page,
@@ -74,65 +74,61 @@ const Page = () => {
 
   return (
     <>
-      {isLoading ? (
-        <LoadingPage></LoadingPage>
-      ) : (
-        <div className="p-6 space-y-10">
-          <div className="border rounded-md">
-            <div className="p-6 space-y-6">
-              <div className="text-[18px] font-[500px]">
-                {selectedToggle === "ALL" ? "All Users" : selectedToggle}
-              </div>
-              <div className="flex items-center justify-between">
-                <ToggleGroupButton
-                  defaultValue="ALL"
-                  options={[
-                    { label: "All Users", value: "ALL" },
-                    { label: "Teacher", value: "TEACHER" },
-                    { label: "Student", value: "STUDENT" },
-                    { label: "Parent", value: "PARENT" },
-                  ]}
-                  onChange={(val) => {
-                    setToggle(val as any); // cast to match state type
-                    setPage(1); // reset page
-                  }}
-                />
-
-                <SearchCustom
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setPage(1); // reset page
-                  }}
-                />
-              </div>
+      <div className="p-6 space-y-10">
+        <div className="border rounded-md">
+          <div className="p-6 space-y-6">
+            <div className="text-[18px] font-[500px]">
+              {selectedToggle === "ALL" ? "All Users" : selectedToggle}
             </div>
+            <div className="flex items-center justify-between">
+              <ToggleGroupButton
+                defaultValue="ALL"
+                options={[
+                  { label: "All Users", value: "ALL" },
+                  { label: "Teacher", value: "TEACHER" },
+                  { label: "Student", value: "STUDENT" },
+                  { label: "Parent", value: "PARENT" },
+                ]}
+                onChange={(val) => {
+                  setToggle(val as any); // cast to match state type
+                  setPage(1); // reset page
+                }}
+              />
 
-            <div className="h-[calc(100vh-320px)] overflow-y-auto">
-              <hr />
-              {isFetching ? (
-                <LoadingTable></LoadingTable>
-              ) : (
-                <>
-                  {" "}
-                  <DynamicTable
-                    headers={headers}
-                    data={allData}
-                    avatarField="image"
-                    badgeField="role"
-                    getBadgeClasses={getBadgeClasses}
-                  />
-                  <hr />
-                </>
-              )}
-            </div>
-
-            <div className="h-16 flex justify-center items-center">
-              <PaginationCustom meta={meta} onPageChange={handlePageChange} />
+              <SearchCustom
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1); // reset page
+                }}
+              />
             </div>
           </div>
+
+          <div className="h-[calc(100vh-320px)] overflow-y-auto">
+            <hr />
+            {isFetching ? (
+              <LoadingTable></LoadingTable>
+            ) : (
+              <>
+                {" "}
+                <DynamicTable
+                  headers={headers}
+                  data={allData}
+                  avatarField="image"
+                  badgeField="role"
+                  getBadgeClasses={getBadgeClasses}
+                />
+                <hr />
+              </>
+            )}
+          </div>
+
+          <div className="h-16 flex justify-center items-center">
+            <PaginationCustom meta={meta} onPageChange={handlePageChange} />
+          </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
